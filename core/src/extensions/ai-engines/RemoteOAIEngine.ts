@@ -1,5 +1,3 @@
-import { events } from '../../events'
-import { Model, ModelEvent } from '../../types'
 import { OAIEngine } from './OAIEngine'
 
 /**
@@ -12,26 +10,8 @@ export abstract class RemoteOAIEngine extends OAIEngine {
   /**
    * On extension load, subscribe to events.
    */
-  onLoad() {
+  override onLoad() {
     super.onLoad()
-    // These events are applicable to local inference providers
-    events.on(ModelEvent.OnModelInit, (model: Model) => this.loadModel(model))
-    events.on(ModelEvent.OnModelStop, (model: Model) => this.unloadModel(model))
-  }
-
-  /**
-   * Load the model.
-   */
-  async loadModel(model: Model) {
-    if (model.engine.toString() !== this.provider) return
-    events.emit(ModelEvent.OnModelReady, model)
-  }
-  /**
-   * Stops the model.
-   */
-  unloadModel(model: Model) {
-    if (model.engine && model.engine.toString() !== this.provider) return
-    events.emit(ModelEvent.OnModelStopped, {})
   }
 
   /**
