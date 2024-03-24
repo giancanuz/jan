@@ -49,6 +49,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    #tty: true
+    command: ["/app/server/start.sh"]
     environment:
       # Set the AWS access key, secret access key, bucket name, endpoint, and region for app_cpu
       AWS_ACCESS_KEY_ID: minioadmin
@@ -83,6 +85,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
+    #tty: true
+    command: ["/app/server/start.sh"]
     restart: always
     environment:
       # Set the AWS access key, secret access key, bucket name, endpoint, and region for app_gpu
@@ -109,6 +113,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    #tty: true
+    command: ["/app/server/start.sh"]
     environment:
       API_BASE_URL: http://localhost:1337
     restart: always
@@ -137,6 +143,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
+    #tty: true
+    command: ["/app/server/start.sh"]
     restart: always
     environment:
       API_BASE_URL: http://localhost:1337

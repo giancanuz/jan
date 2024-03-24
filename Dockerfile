@@ -1,4 +1,4 @@
-FROM node:20-bookworm AS base
+FROM node:21-bookworm AS base
 
 # 1. Install dependencies only when needed
 FROM base AS builder
@@ -19,7 +19,7 @@ RUN make install-and-build
 FROM base AS runner
 
 # Install g++ 11
-RUN apt update && apt install -y gcc-11 g++-11 cpp-11 jq xsel && rm -rf /var/lib/apt/lists/*
+RUN apt update -y && apt upgrade -y && apt install -y gcc-11 g++-11 cpp-11 jq xsel && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -27,6 +27,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules/
 COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/server/start.sh ./server/start.sh
 
 # Copy the package.json, yarn.lock, and build output of server yarn space to leverage Docker cache
 COPY --from=builder /app/core ./core/
@@ -44,7 +45,7 @@ COPY --from=builder /app/web ./web/
 COPY --from=builder /app/models ./models/
 
 RUN yarn workspace @janhq/uikit install && yarn workspace @janhq/uikit build
-RUN yarn workspace jan-web install
+RUN yarn workspace @janhq/web install && yarn workspace @janhq/web build
 
 RUN npm install -g serve@latest
 
@@ -55,7 +56,8 @@ ENV JAN_API_PORT 1337
 
 ENV API_BASE_URL http://localhost:1337
 
-CMD ["sh", "-c", "export NODE_ENV=production && yarn workspace jan-web build && cd web && npx serve out & cd server && node build/main.js"]
+#CMD ["sh", "-c", "export NODE_ENV=production && cd web && npx serve out & ; cd server && node build/main.js"]
+#CMD ["sh", "-c", "export NODE_ENV=production && cd web && npx serve out &"]
 
 # docker build -t jan .
 # docker run -p 1337:1337 -p 3000:3000 -p 3928:3928 jan
