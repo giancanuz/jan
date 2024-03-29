@@ -16,7 +16,7 @@ services:
       MINIO_ROOT_USER: minioadmin # This acts as AWS_ACCESS_KEY
       MINIO_ROOT_PASSWORD: minioadmin # This acts as AWS_SECRET_ACCESS_KEY
     command: server --console-address ":9001" /data
-    restart: always
+    #restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -57,7 +57,7 @@ services:
       AWS_ENDPOINT: http://10.5.0.2:9000
       AWS_REGION: us-east-1
       API_BASE_URL: http://localhost:1337
-    restart: always
+    #restart: always
     profiles:
       - cpu-s3fs
     ports:
@@ -83,7 +83,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
-    restart: always
+    #restart: always
     environment:
       # Set the AWS access key, secret access key, bucket name, endpoint, and region for app_gpu
       AWS_ACCESS_KEY_ID: minioadmin
@@ -111,7 +111,7 @@ services:
       dockerfile: Dockerfile
     environment:
       API_BASE_URL: http://localhost:1337
-    restart: always
+    #restart: always
     profiles:
       - cpu-fs
     ports:
@@ -137,7 +137,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.gpu
-    restart: always
+    #restart: always
     environment:
       API_BASE_URL: http://localhost:1337
     profiles:
